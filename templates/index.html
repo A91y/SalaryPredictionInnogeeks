@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Salary Prediction App</title>
+    <style>
+      body {
+        background: linear-gradient(45deg, #3a3a3a, #6b049f);
+        color: #fff;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        flex-direction: column;
+      }
+
+      h1 {
+        margin-bottom: 20px;
+      }
+
+      form {
+        background: rgba(0, 0, 0, 0.6);
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+        width: 100%;
+        max-width: 400px;
+        /* padding-right: 0px; */
+      }
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      input[type="text"],
+      input[type="radio"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: none;
+        border-radius: 5px;
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #fff;
+      }
+
+      input[type="radio"] {
+        display: inline-block;
+        width: auto;
+        margin-right: 10px;
+      }
+
+      input[type="submit"] {
+        background: #6b049f;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      input[type="submit"]:hover {
+        background: #9b2eb4;
+      }
+
+      .prediction {
+        background-color: rgba(0, 0, 0, 0.4);
+        border-radius: 5px;
+        padding: 40px;
+        margin-top: 20px;
+        font-size: 18px;
+        width: 100%;
+        visibility: hidden;
+      }
+
+      @media screen and (max-width: 500px) {
+        form {
+          width: 95%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Salary Prediction App</h1>
+
+    <div class="form-container">
+        <form id="salary-form">
+      <!-- <form method="POST" action="/predict"> -->
+        <label for="age">Age:</label>
+        <input type="text" name="age" id="age" required />
+
+        <label>Gender:</label>
+        <input type="radio" name="gender" value="0" required /> Male
+        <input type="radio" name="gender" value="1" required /> Female
+
+        <label for="years_of_experience">Years of Experience:</label>
+        <input
+          type="text"
+          name="years_of_experience"
+          id="years_of_experience"
+          required
+        />
+
+        <input type="submit" value="Predict" />
+      </form>
+      <div class="prediction"></div>
+      <!-- {% if prediction %}
+      <div class="prediction">Predicted Salary: ${{ prediction }}</div>
+      <p>Input Data: {{ input_data }}</p>
+      {% endif %} {% if error %}
+      <p style="color: red">{{ error }}</p>
+      {% endif %} -->
+    </div>
+    <!-- Include jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        // Handle form submission using AJAX
+        $("#salary-form").submit(function (event) {
+          event.preventDefault(); // Prevent the default form submission
+
+          // Serialize form data
+          var formData = $(this).serialize();
+          // Send an AJAX POST request to the backend
+          $.ajax({
+            type: "POST",
+            url: "/predict",
+            data: formData,
+            success: function (response) {
+              // Update the prediction result and input data on the page
+              $(".prediction").html(response.prediction);
+              $(".prediction").css("visibility", "visible");
+            },
+            error: function (error) {
+              // Handle errors here
+              $(".prediction").html("Error occurred.");
+                $(".prediction").css("visibility", "visible");
+                
+            },
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
